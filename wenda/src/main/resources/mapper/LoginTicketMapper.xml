@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.wenda.dao.LoginTicketMapper">
+    <resultMap id="loginTicketResultMap" type="com.example.wenda.domain.LoginTicket">
+        <id property="id" column="id"/>
+        <result property="status" column="status"/>
+        <result property="userId" column="user_id"/>
+        <result property="expiredDate" column="expired_date"/>
+        <result property="ticket" column="ticket"/>
+    </resultMap>
+    <sql id="table">
+        login_ticket
+    </sql>
+    <sql id="base_column">
+        id
+        , status,ticket,expired_date,user_id
+    </sql>
+
+    <select id="queryTicket" resultMap="loginTicketResultMap">
+        SELECT
+        <include refid="base_column"/>
+        FROM
+        <include refid="table"/>
+
+
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectTicket" resultMap="loginTicketResultMap">
+        SELECT
+        <include refid="base_column"/>
+        FROM
+        <include refid="table"/>
+    </select>
+
+    <select id="queryTicketByUserId" resultMap="loginTicketResultMap">
+        SELECT
+        <include refid="base_column"/>
+        FROM
+        <include refid="table"/>
+        <if test="userId != 0">
+            WHERE user_id = #{userId}
+        </if>
+    </select>
+
+    <insert id="addTicket">
+        insert into
+        <include refid="table"/>
+        (<include refid="base_column"/>)
+        values
+        (#{id},#{status}, #{ticket}, #{expiredDate}, #{userId})
+    </insert>
+
+    <update id="updateLoginTicket">
+        update
+        <include refid="table" />
+        set status=#{status},
+        expired_date=#{expiredDate}
+        where user_id = #{userId}
+    </update>
+</mapper>
